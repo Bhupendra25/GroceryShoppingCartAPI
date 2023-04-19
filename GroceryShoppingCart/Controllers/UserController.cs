@@ -21,13 +21,6 @@ namespace GroceryShoppingCartAPI.Controllers
             _context = context;
         }
 
-
-        /* private readonly APIDbContext _context;
-         public UserController(APIDbContext context)
-         {
-             _context = context;
-         }*/
-
         private User AuthenticateUser(UserLogin usr)
         {
             User _usr = null;
@@ -38,11 +31,6 @@ namespace GroceryShoppingCartAPI.Controllers
             {
                 _usr = new User { UserName = usr.UserName };
             }
-
-            /*  if (usr.UserName ==   && usr.Password == "Admin123")
-              {
-                  _usr = new User { UserName = "Bhupendra" };
-              }*/
             return _usr;
         }
 

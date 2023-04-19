@@ -12,5 +12,6 @@ namespace GroceryShoppingCartAPI.Data
 
         public DbSet<User> users { get; set; }
         public DbSet<Product> products { get; set; }
+        public DbSet<UserCart> userCarts { get; set; }
     }
 }

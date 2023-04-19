@@ -7,7 +7,7 @@ namespace GroceryShoppingCartAPI.Models
         [Required]
         public string UserName { get; set; }
         [Required]
-        [DataType("password")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
     }
 }
