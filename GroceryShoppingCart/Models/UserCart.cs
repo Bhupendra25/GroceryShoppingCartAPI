@@ -7,6 +7,7 @@ namespace GroceryShoppingCartAPI.Models
         [Key]
         public int CartId { get; set; }
         // public string UserID { get; set; }
+        public string Username { get; set; }
         public string prName { get; set; }
 
         public int Quantity { get; set; }

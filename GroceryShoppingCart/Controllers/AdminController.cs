@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GroceryShoppingCartAPI.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
+
     public class AdminController : ControllerBase
     {
         private readonly APIDbContext _context;
@@ -15,8 +17,9 @@ namespace GroceryShoppingCartAPI.Controllers
             _context = context;
         }
 
-
+        //[Authorize]
         [HttpGet]
+        [Route("Products")]
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         {
             if (_context.products == null)
@@ -25,9 +28,9 @@ namespace GroceryShoppingCartAPI.Controllers
             }
             return await _context.products.ToListAsync();
         }
-
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProduct(int id)
+
+        public async Task<ActionResult<IEnumerable<Product>>> SearchProduct(int id)
         {
             if (_context.products == null)
             {
@@ -42,15 +45,23 @@ namespace GroceryShoppingCartAPI.Controllers
         }
 
         [HttpPost]
+        [Route("Add Product")]
         public async Task<ActionResult<Product>> PostProduct(Product product)
         {
-            _context.products.Add(product);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetProduct), new { id = product.PrID }, product);
+            if (_context.products.Where(n => n.PrName == product.PrName).Any())
+            {
+                return Ok("Product already Available");
+            }
+            else
+            {
+                _context.products.Add(product);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction(nameof(GetProduct), new { id = product.PrID }, product);
+            }
         }
 
         [HttpPut]
+        [Route("Update Product")]
         public async Task<IActionResult> PutProduct(int id, Product product)
         {
             if (id != product.PrID)
@@ -83,6 +94,7 @@ namespace GroceryShoppingCartAPI.Controllers
         {
             return (_context.products?.Any(p => p.PrID == id)).GetValueOrDefault();
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBrand(int id)
