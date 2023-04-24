@@ -1,5 +1,7 @@
 ﻿using GroceryShoppingCartAPI.Data;
+using GroceryShoppingCartAPI.DTO;
 using GroceryShoppingCartAPI.Models;
+using GroceryShoppingCartAPI.Services.EmailService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,9 +14,11 @@ namespace GroceryShoppingCartAPI.Controllers
     public class AdminController : ControllerBase
     {
         private readonly APIDbContext _context;
-        public AdminController(APIDbContext context)
+        private readonly IEmailService _emailService;
+        public AdminController(APIDbContext context, IEmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         //[Authorize]
@@ -112,6 +116,15 @@ namespace GroceryShoppingCartAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok();
 
+        }
+
+        [HttpPost]
+        [Route("Confirmation Email")]
+        public IActionResult SendEmail(EmailDto request)
+        {
+            _emailService.SendEmail(request);
+
+            return Ok();
         }
     }
 }

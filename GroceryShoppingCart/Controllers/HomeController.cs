@@ -11,17 +11,13 @@ namespace GroceryShoppingCartAPI.Controllers
     public class HomeController : Controller
     {
         private readonly APIDbContext _context;
+
         public HomeController(APIDbContext context)
         {
             _context = context;
+
         }
 
-        /* [HttpGet]
-         public IActionResult Index()
-         {
-             return Ok(_context.products.ToList());
-
-         }*/
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
@@ -96,16 +92,13 @@ namespace GroceryShoppingCartAPI.Controllers
             // Merge cart items into a list of product names
             var products = userCartItems.Select(c => c.prName).ToList();
 
-            /* // Clear user's cart
-             _context.userCarts.RemoveRange(userCartItems);
-             await _context.SaveChangesAsync();*/
 
             // Return list of products and total amount due
             return Ok(new { products, totalAmount });
         }
 
         [HttpPost("Checkout")]
-        public async Task<ActionResult> Checkout(string username)
+        public async Task<ActionResult> Checkout(string username, EmailDto request)
         {
             // Get all products in user's cart
             var userCartItems = await _context.userCarts
@@ -130,6 +123,7 @@ namespace GroceryShoppingCartAPI.Controllers
 
             // Save changes to Product table
             await _context.SaveChangesAsync();
+
             return Ok();
         }
     }
