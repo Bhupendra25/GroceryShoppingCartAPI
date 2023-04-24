@@ -1,6 +1,7 @@
 ﻿using GroceryShoppingCartAPI.Data;
 using GroceryShoppingCartAPI.DTO;
 using GroceryShoppingCartAPI.Models;
+using GroceryShoppingCartAPI.Services.EmailService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,11 +12,13 @@ namespace GroceryShoppingCartAPI.Controllers
     public class HomeController : Controller
     {
         private readonly APIDbContext _context;
+        private readonly IEmailService _emailService;
 
-        public HomeController(APIDbContext context)
+
+        public HomeController(APIDbContext context, IEmailService emailService)
         {
             _context = context;
-
+            _emailService = emailService;
         }
 
 
@@ -98,7 +101,7 @@ namespace GroceryShoppingCartAPI.Controllers
         }
 
         [HttpPost("Checkout")]
-        public async Task<ActionResult> Checkout(string username, EmailDto request)
+        public async Task<ActionResult> Checkout(string username)
         {
             // Get all products in user's cart
             var userCartItems = await _context.userCarts
@@ -123,7 +126,13 @@ namespace GroceryShoppingCartAPI.Controllers
 
             // Save changes to Product table
             await _context.SaveChangesAsync();
-
+            var mail = new EmailDto
+            {
+                To = "katherine94@ethereal.email",
+                Subject = "Order Placed Successfully",
+                Body = "Your order has been recieved and will reach to you within 4 to 5 week Days "
+            };
+            _emailService.SendEmail(mail);
             return Ok();
         }
     }

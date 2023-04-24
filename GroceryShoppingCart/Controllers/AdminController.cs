@@ -120,9 +120,15 @@ namespace GroceryShoppingCartAPI.Controllers
 
         [HttpPost]
         [Route("Confirmation Email")]
-        public IActionResult SendEmail(EmailDto request)
+        public IActionResult SendEmail()
         {
-            _emailService.SendEmail(request);
+            var mail = new EmailDto
+            {
+                To = "katherine94@ethereal.email",
+                Subject = "Order Placed Successfully",
+                Body = "Your order has been recieved and will reach to you within 4 to 5 week Days "
+            };
+            _emailService.SendEmail(mail);
 
             return Ok();
         }
