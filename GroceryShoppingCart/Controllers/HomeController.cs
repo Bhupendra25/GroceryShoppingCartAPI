@@ -2,6 +2,7 @@
 using GroceryShoppingCartAPI.DTO;
 using GroceryShoppingCartAPI.Models;
 using GroceryShoppingCartAPI.Services.EmailService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,7 @@ namespace GroceryShoppingCartAPI.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         {
             if (_context.products == null)
@@ -62,18 +64,22 @@ namespace GroceryShoppingCartAPI.Controllers
                 Quantity = item.Quantity,
                 Amount = item.Quantity * product.Price,
             };
-            if (_context.users.Where(u => u.UserName == item.Username).Any())
-            {
-                await _context.userCarts.AddAsync(Newuser);
-                await _context.SaveChangesAsync();
-                return Ok();
+            /* if (_context.users.Where(u => u.UserName == item.Username).Any())
+             {
+                 await _context.userCarts.AddAsync(Newuser);
+                 await _context.SaveChangesAsync();
+                 return Ok();
 
-            }
-            else
-            {
+             }
+             else
+             {
 
-                return Ok("User does not exist!!!");
-            }
+                 return Ok("User does not exist!!!");
+             }
+ */
+            await _context.userCarts.AddAsync(Newuser);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
         [HttpPost("BuyNow/{username}")]
